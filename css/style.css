@@ -1,0 +1,212 @@
+/* =========================================================
+   VARIÁVEIS
+   ========================================================= */
+:root {
+  --header-h: 76px;
+  --gap: 12px;
+  --ink: #111;
+  --paper: #fff;
+  --line: rgba(0, 0, 0, 0.12);
+  --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+figure { margin: 0; }
+a { color: inherit; text-decoration: none; }
+
+/* =========================================================
+   HEADER — fixo ao rolar, translúcido com desfoque
+   ========================================================= */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 24px;
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background 0.3s ease;
+}
+
+.site-header.is-scrolled { background: rgba(255, 255, 255, 0.75); }
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.header-right { justify-content: flex-end; text-align: right; }
+
+.header-brand {
+  /* o padding-left iguala o espaço que o letter-spacing deixa depois da última letra,
+     para o logo ficar centrado de verdade */
+  padding-left: 0.12em;
+  word-spacing: -0.1em; /* aproxima o C do B sem mexer no espaçamento das letras */
+  text-align: center;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+.header-brand small {
+  display: block;
+  padding-left: 0.3em;
+  word-spacing: normal;
+  margin-top: 5px;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+}
+.header-brand small + small { margin-top: 3px; }
+
+.site-header a { transition: opacity 0.2s; }
+.site-header a:hover { opacity: 0.55; }
+
+/* =========================================================
+   1) BANNERS
+   ========================================================= */
+.banners { display: block; }
+
+.banner {
+  width: 100%;
+  height: calc(100vh - var(--header-h));
+  height: calc(100svh - var(--header-h));
+  min-height: 360px;
+  overflow: hidden;
+  background: #e8e6e1;
+}
+
+/* enquadramento: mantém o modelo e as pedras dentro do recorte */
+.banner-1 img { object-position: 50% 50%; }
+.banner-2 img { object-position: 50% 70%; }
+
+/* =========================================================
+   2) SEQUÊNCIA DE 5 IMAGENS — troca individual no hover
+   ========================================================= */
+.row-five {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  /* proporção do protótipo: ~41% da largura, sem passar da altura da tela */
+  height: min(41vw, calc(100vh - var(--header-h)));
+  min-height: 420px;
+}
+
+.swap {
+  position: relative;
+  overflow: hidden;
+  background: #e8e6e1;
+  cursor: pointer;
+}
+
+.swap img {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.35s ease;
+}
+
+.swap .img-hover { opacity: 0; }
+
+/* as fotos são paisagem: o recorte vertical é centrado na peça (--pos / --pos-b no HTML) */
+.swap .img-main  { object-position: var(--pos, 50%) 50%; }
+.swap .img-hover { object-position: var(--pos-b, 50%) 50%; }
+
+/* mouse: aparece só enquanto o cursor está sobre a imagem.
+   celular: o toque alterna a classe .is-swapped (ver js/main.js) */
+@media (hover: hover) {
+  .swap:hover .img-hover { opacity: 1; }
+}
+.swap.is-swapped .img-hover { opacity: 1; }
+
+/* =========================================================
+   3) SEQUÊNCIA DE 4 IMAGENS COBRINDO A TELA
+   ========================================================= */
+/* grade 2x2: painel 1 e 2 em cima, painel 3 e 4 embaixo */
+.row-four {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.panel {
+  position: relative;
+  aspect-ratio: 4 / 5; /* retrato: corta pouco as fotos e mantém a calça e a pessoa inteiras */
+  overflow: hidden;
+  background: #222;
+}
+
+/* --pos = enquadramento horizontal, --posy = vertical (ajustado por foto no HTML) */
+.panel img { object-position: var(--pos, 50%) var(--posy, 50%); }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.site-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 28px 24px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-top: 1px solid var(--line);
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.footer-col:last-child { text-align: right; }
+.site-footer a { text-transform: none; }
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+@media (max-width: 960px) {
+  .site-header { padding: 0 16px; gap: 8px; font-size: 10px; }
+  .header-brand { font-size: 26px; }
+
+  .row-five { grid-template-columns: repeat(2, 1fr); height: auto; }
+  .swap { aspect-ratio: 3 / 4; }
+  .swap:last-child { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+
+  .site-footer { padding: 24px 16px; font-size: 10px; }
+  .footer-col:last-child { text-align: left; }
+}
+
+@media (max-width: 600px) {
+  /* banners mais baixos para o modelo não ficar minúsculo */
+  .banner { height: 118vw; min-height: 0; }
+  .banner-1 img { object-position: 47% 50%; }
+  .banner-2 img { object-position: 50% 62%; }
+
+  /* painéis: uma coluna, cada foto na proporção original (sem corte nenhum) */
+  .row-four { grid-template-columns: 1fr; }
+  .panel { aspect-ratio: auto; }
+  .panel img { height: auto; }
+}
